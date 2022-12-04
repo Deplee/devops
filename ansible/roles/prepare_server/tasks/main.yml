@@ -1,0 +1,3 @@
+---
+# tasks file for prepare_host
+- include_tasks: install_pkgs.yml

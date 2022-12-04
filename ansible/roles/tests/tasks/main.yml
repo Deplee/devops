@@ -1,0 +1,4 @@
+---
+# tasks file for test
+#- include_tasks: nmap.yml
+- include_tasks: remove_dirs.yml

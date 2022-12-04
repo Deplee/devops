@@ -1,0 +1,11 @@
+- name: "Install necessary pkgs"
+  ansible.builtin.apt:
+    - nmap
+    - vim
+    - nginx
+    - openssh-server
+    - wireshark
+    - mysql
+    - git
+  update_cache: true
+  become: true

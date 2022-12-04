@@ -1,0 +1,31 @@
+def gv
+pipeline {
+    agent any
+        parameters {
+            string(name: 'Version', defaultValue: '', description: 'available version')
+            choice(name: 'Version', choices: ['1.0', '1.0.1'], description: '')
+            booleanParam (name: 'runTest', defaultValue: true, description: '')
+        }
+        stages {
+            stage("Preparation") {
+                steps {
+                    script {
+                        echo "test"
+                        gv = load('script.groovy')
+                    }
+                }
+            }   
+            stage("Test") {
+                when {
+                    expression {
+                        params.runTest == true
+                    }
+                }
+                    steps {
+                        script {
+                            gv.deploy()
+                        }
+                    }
+                }
+            }
+        }

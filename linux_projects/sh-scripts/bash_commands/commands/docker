@@ -1,0 +1,67 @@
+#!/bin/bash
+
+getDate(){
+date +%Y-%m-%d_%H:%M:%S | sed -r 's/_/ /g'
+}
+
+write-log(){
+echo "[$(getDate)] [LOG]: $@"
+}
+
+__basedir(){
+  script=${BASH_SOURCE[0]}
+  dir=$(dirname "$script")
+  full_dir=$(cd "${dir}" && pwd)
+  echo $full_dir
+}
+
+docker::stop(){
+  read -p "Container name: " container_name
+  docker stop ${container_name}
+  write-log "Container [${container_name}] successfully stopped."
+}
+
+docker::remove-exited(){
+docker rm $(docker ps --filter status=exited -q) > $(__basedir)/containers_list.txt
+for container in $(cat $(__basedir)/containers_list.txt); do
+  write-log "Container [$container] successfully stopped."
+done
+}
+
+docker::pull(){
+  read -p "Image name:tag: " img_name
+  write-log "Image [${img_name}] pulling started."
+  docker pull ${img_name}
+  write-log "Image [${img_name}] successfully pulled."
+}
+
+docker::push(){
+  read -p "Container name: " container_name
+  read -p "Repository: " repository
+  write-log "Image [${img_name}] pushing started."
+  containerId=$(docker container ls | grep "$container_name" | awk '{print $1}')
+  read -p "New image name:tag: " new_img_name
+  docker commit ${containerId} ${repository}/${new_img_name}
+  docker push ${repository}/${new_img_name}
+  write-log "Image [${img_name}] successfully pushed."
+}
+
+docker::remove-image(){
+  read -p "Image name: " img_name
+  docker rmi ${img_name}
+  write-log "Image [${img_name}] successfully removed."
+}
+
+docker::description(){
+  echo "Script to work with Docker.io"
+}
+
+docker::usage(){
+  cat << EOT
+stop            Stop docker container
+remove-exited   Remove docker containers where status=exited
+remove-image    Remove docker image
+pull            Pull image from registry
+push            Push image to registry
+EOT
+}

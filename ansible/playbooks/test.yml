@@ -1,0 +1,4 @@
+- name: "TEST PLAYBOOK"
+  hosts: "my"
+  roles:
+    - role: '../roles/tests/'
