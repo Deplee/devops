@@ -1,0 +1,4 @@
+#- name: "get nginx version"
+- name: "check_nginx_version"
+  shell: nginx -v
+  register: check_nginx_version
