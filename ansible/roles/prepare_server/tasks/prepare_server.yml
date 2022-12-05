@@ -19,9 +19,9 @@
         - "/etc/nginx"
         - "/var/log/nginx"
         - "/data/nginx"
-        - "/home/ubuntu1/kekdir"
-      # notify:
-      # - start nginx
+        # - "/home/ubuntu1/kekdir"
+      notify:
+      - start nginx
       become: true
       when: check_nginx_version.stdout.find('nginx/') != -1
 #     when: check_nginx_version.stdout.find('nginx') != -1 #version is empty - dir will be created
