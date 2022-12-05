@@ -19,18 +19,12 @@
         - "/etc/nginx"
         - "/var/log/nginx"
         - "/data/nginx"
-        # - "/home/ubuntu1/kekdir"
-      notify:
-      - start nginx
+        - "/home/ubuntu1/kekdir"
+      # notify:
+      # - start nginx
       become: true
+      when: check_nginx_version.stdout.find('nginx/') != -1
+#     when: check_nginx_version.stdout.find('nginx') != -1 #version is empty - dir will be created
+#     when: check_nginx_version.stdout.find('nginx') != 1 #version is NOT empty - dir will not be created
 
-# - name: "Start & enable nginx"
-#   ansible.builtin.systemd:
-#     name: "nginx"
-#     state: "started"
-#     enabled: "yes"
-#     become: true
-#     when: check_nginx_version.stdout.find('nginx') == -1
-#     listen: "enable_and_start_nginx"
-#     when: check_nginx_version.stdout.find('nginx') == -1 #start service
-#     when: check_nginx_version.stdout.find('nginx') != 1 #stop service
+

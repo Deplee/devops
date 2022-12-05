@@ -3,4 +3,4 @@
 #nginx_latest: false
 pkgs_latest: false
 nginx_remove: false
-nginx_version: false
+nginx_version: true
