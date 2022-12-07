@@ -2,5 +2,5 @@
 # defaults file for prepare_host
 #nginx_latest: false
 pkgs_latest: false
-nginx_remove: false
-nginx_version: true
+nginx_remove: true
+nginx_version: false

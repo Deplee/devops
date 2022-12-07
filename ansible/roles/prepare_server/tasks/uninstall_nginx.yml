@@ -1,0 +1,74 @@
+# roles/nginx/tasks/uninstall_nginx.yml
+- name: firsts steps
+  block:
+
+  - name: creating backup dirs
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: directory
+      owner: "ubuntu1"
+      group: "ubuntu1"
+      mode: "0755" 
+    become: true
+    with_items:
+      - /etc/backup_nginx/etc
+      - /etc/backup_nginx/data
+      - /etc/backup_nginx/log/
+      - /etc/backup_nginx/html
+
+  - name: backup current
+    ansible.builtin.copy:
+      src: '{{ item.src }}'
+      dest: '{{ item.dest }}'
+      remote_src: true
+    become: true
+    with_items:
+      - { src: /etc/nginx/, dest: /etc/backup_nginx/etc/ }
+      - { src: /data/nginx, dest: /etc/backup_nginx/data/ }
+      - { src: /var/log/nginx/, dest: /etc/backup_nginx/log/ }
+      - { src: /var/www/html/, dest: /etc/backup_nginx/html/ }
+    
+
+  - name: remove nginx dirs
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: absent
+    become: true
+    with_items:
+      - /etc/nginx
+      - /data/nginx
+      - /var/log/nginx
+      - /var/www/html
+   
+  - name: uninstall nginx
+    ansible.builtin.apt:
+      name: "nginx"
+      # - "nginx-common"
+      state: absent
+      autoremove: yes
+    become: true
+    notify: "stop nginx"
+
+
+
+# - name: close port by ufw
+#   block:
+#     - name: open ports for sites by ufw
+#       community.general.ufw:
+#         port: "{{ site_variables.__getitem__(item).port }}"
+#         rule: allow
+#         proto: tcp
+#         delete: true
+#       become: true
+#       with_items: "{{ sites_enabled }}"
+#       when: site_variables.__getitem__(item).port is defined
+
+#     - name: close ports for streams by ufw
+#       community.general.ufw:
+#         port: "{{ stream_variables.__getitem__(item).port }}"
+#         rule: allow
+#         proto: tcp
+#         delete: true
+#       become: true
+#       with_items: "{{ streams_enabled }}"
+#       when: stream_variables.__getitem__(item).port is defined and ansible_os_family == "Debian"
