@@ -9,8 +9,8 @@ properties([
             description: ""
             ),
         string (
-            name: "Test String",
-            defaultValue: "",
+            name: "Test_String",
+            defaultValue: "123",
             description: ""
         ),
         booleanParam(
@@ -28,9 +28,10 @@ node ('Ubuntu Main'){
         
     }
     stage("Test stage 2"){
+            if (params.Test_String == "123"){
             println("---->")
             println("Stage 2 is ok")
-            println("---->")
+            println("---->")}
         
     }
 }
