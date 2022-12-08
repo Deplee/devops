@@ -13,7 +13,7 @@
     with_items:
       - /etc/backup_nginx/etc
       - /etc/backup_nginx/data
-      - /etc/backup_nginx/log/
+      - /etc/backup_nginx/log
       - /etc/backup_nginx/html
 
   - name: backup current
@@ -24,7 +24,7 @@
     become: true
     with_items:
       - { src: /etc/nginx/, dest: /etc/backup_nginx/etc/ }
-      - { src: /data/nginx, dest: /etc/backup_nginx/data/ }
+      - { src: /data/nginx/, dest: /etc/backup_nginx/data/ }
       - { src: /var/log/nginx/, dest: /etc/backup_nginx/log/ }
       - { src: /var/www/html/, dest: /etc/backup_nginx/html/ }
     
