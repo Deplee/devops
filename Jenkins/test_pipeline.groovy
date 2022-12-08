@@ -18,4 +18,10 @@ node ('Ubuntu Main'){
             println("---->")
         
     }
+    stage("Test stage 2"){
+            println("---->")
+            println("Stage 2 is ok")
+            println("---->")
+        
+    }
 }
