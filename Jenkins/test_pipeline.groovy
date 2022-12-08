@@ -8,7 +8,16 @@ properties([
             ],
             description: ""
             ),
-        string(name: 'Version', defaultValue: '', description: 'available version')    
+        string (
+            name: "Test String",
+            defaultValue: "",
+            description: ""
+        ),
+        booleanParam(
+            name: "Test Boolean",
+            defaultValue: true,
+            description: ""
+        )
         ])
     ])
 node ('Ubuntu Main'){
