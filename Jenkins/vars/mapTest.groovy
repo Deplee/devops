@@ -4,5 +4,5 @@ def call(String name){
 
 
 def map(Map config = [:]){
-    echo "Hello ${config.name}, ${config.value}"
+    echo "Hello ${config.name}, ${config.age}"
 }
