@@ -1,3 +1,3 @@
 def call(String name){
-    println("Hello ${name}")
+    echo "Hello ${name}"
 }
