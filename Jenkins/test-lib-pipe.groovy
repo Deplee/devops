@@ -5,5 +5,6 @@ node("Ubuntu Main"){
     println("STAGE #1")
         mapTest.map(test: "David", age: "32")
         mapTest.call("ivan")
+        
     }
 }
