@@ -1,0 +1,75 @@
+version: "3"
+services:
+  redis:
+    image: redis:6.2.4
+    container_name: sentry-redis
+    volumes:
+      - ./sentry-data/redis_data:/data
+    networks:
+      - sentry
+ 
+  postgres:
+    image: postgres
+    container_name: sentry-postgres
+    env_file:
+      - cfg-sentry.env
+    volumes:
+      - ./sentry-data/postgres_data:/var/lib/postgresql/data/
+    networks:
+      - sentry
+ 
+  sentry:
+    image: sentry
+    container_name: sentry-main
+    links:
+     - redis
+     - postgres
+    ports:
+     - 8080:9000
+    env_file:
+      - .cfg-sentry.env
+    volumes:
+      - ./sentry-data/main_data/etc_cfg:/etc/sentry
+      - ./sentry-data/main_data/files:/var/lib/sentry/files
+    networks:
+      - sentry
+ 
+  cron:
+    image: sentry
+    container_name: sentry-cron
+    links:
+     - redis
+     - postgres
+    command: "sentry run cron"
+    env_file:
+      - .cfg-sentry.env
+    volumes:
+      - ./sentry-data/main_data/etc_cfg:/etc/sentry
+      - ./sentry-data/main_data/files:/var/lib/sentry/files
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - sentry
+ 
+  worker:
+    image: sentry
+    container_name: sentry-worker
+    links:
+     - redis
+     - postgres
+    command: "sentry run worker"
+    env_file:
+      - .cfg-sentry.env
+    volumes:
+      - ./sentry-data/main_data/etc_cfg:/etc/sentry
+      - ./sentry-data/main_data/files:/var/lib/sentry/files
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - sentry
+ 
+networks:
+  sentry:
+    driver: bridge
