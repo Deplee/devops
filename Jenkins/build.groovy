@@ -133,7 +133,7 @@ timestamps {
                                 println('----> Clone infrastructure')
                                 println("-----")
                                 dir('infrastructure') {
-                                        git branch: env.INFRASTRUCTURE_BRANCH, credentialsId: 'gitlab_gituser', url: '*'
+                                        git branch: env.INFRASTRUCTURE_BRANCH, credentialsId: '', url: '*'
                                         pwsh returnStdout: true, script: '''
                         $InfraBranchWork = "''' + env.INFRASTRUCTURE_BRANCH + '''"
                         $InfraBranchSwitch = "''' + branch_name + '''"
