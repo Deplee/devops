@@ -1,12 +1,4 @@
-# devops
-tools &amp; etc
+# DevOps
+---
 
-# Personal Daily Used
-```
-ansible
-groovy
-Jenkins
-k8s
-nginx
-sentry-docker
-```
+Repo for automations & etc.

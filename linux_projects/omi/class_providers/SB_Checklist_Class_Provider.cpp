@@ -46,7 +46,7 @@ void SB_Checklist_Class_Provider::EnumerateInstances(
         std::string ZNO;
         std::string Date;
         std::string WiFi;
-	std::string BLTH;
+	    std::string BLTH;
         std::string BRCD;
         std::string TM;
         std::string MFU;
@@ -78,7 +78,7 @@ void SB_Checklist_Class_Provider::EnumerateInstances(
         checklist.Date_value(Date.c_str());
         checklist.WiFi_value(WiFi.c_str());
         checklist.BLTH_value(BLTH.c_str());
-	checklist.BRCD_value(BRCD.c_str());
+	    checklist.BRCD_value(BRCD.c_str());
         checklist.TM_value(TM.c_str());
         checklist.MFU_value(MFU.c_str());
         checklist.BP_value(BP.c_str());
