@@ -69,6 +69,7 @@ x-sentry-defaults: &sentry_defaults
     # Leaving the value empty to just pass whatever is set
     # on the host system (or in the .env file)
     SENTRY_EVENT_RETENTION_DAYS:
+    SENTRY_MAIL_HOST:
   volumes:
     - "sentry-data:/data"
     - "./sentry:/etc/sentry"
@@ -128,8 +129,6 @@ services:
       <<: *healthcheck_defaults
       # Using default user "postgres" from sentry/sentry.conf.example.py or value of POSTGRES_USER if provided
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
-    ports:
-    - 5132:5432
     command:
       [
         "postgres",
@@ -141,9 +140,6 @@ services:
         "max_wal_senders=1",
       ]
     environment:
-      POSTGRES_USER:
-      POSTGRES_DB:
-      POSTGRES_PASSWORD:
       POSTGRES_HOST_AUTH_METHOD: "trust"
     entrypoint: /opt/sentry/postgres-entrypoint.sh
     volumes:
@@ -194,9 +190,6 @@ services:
     healthcheck:
       <<: *healthcheck_defaults
       test: ["CMD-SHELL", "nc -z localhost 9092"]
-      interval: 10s
-      timeout: 10s
-      retries: 30
   clickhouse:
     <<: *restart_policy
     image: clickhouse-self-hosted-local
@@ -230,9 +223,9 @@ services:
           # https://github.com/getsentry/self-hosted/issues/1537
           "http_proxy='' wget -nv -t1 --spider 'http://localhost:8123/' || exit 1",
         ]
-      interval: 10s
-      timeout: 10s
-      retries: 30
+      interval: 3s
+      timeout: 600s
+      retries: 200
   geoipupdate:
     image: "maxmindinc/geoipupdate:v4.7.1"
     # Override the entrypoint in order to avoid using envvars for config.
@@ -261,7 +254,7 @@ services:
   # Kafka consumer responsible for feeding transactions data into Clickhouse
   snuba-transactions-consumer:
     <<: *snuba_defaults
-    command: consumer --storage transactions --consumer-group transactions_group --auto-offset-reset=latest --max-batch-time-ms 750
+    command: consumer --storage transactions --consumer-group transactions_group --auto-offset-reset=latest --max-batch-time-ms 750 --commit-log-topic=snuba-commit-log
   snuba-replacer:
     <<: *snuba_defaults
     command: replacer --storage errors --auto-offset-reset=latest --max-batch-size 3
@@ -320,20 +313,8 @@ services:
   cron:
     <<: *sentry_defaults
     command: run cron
-  worker_1:
+  worker:
     <<: *sentry_defaults
-    command: run worker -Q events.process_event
-  worker_2:
-    <<: *sentry_defaults
-    command: run worker -Q events.reprocessing.process_event
-  worker3:
-    << : *sentry_defaults
-    command: run worker -Q events.reprocess_events
-  worker4:
-    << : *sentry_defaults
-    command: run worker -Q events.save_event
-  worker5:
-    << : *sentry_defaults
     command: run worker
   ingest-consumer:
     <<: *sentry_defaults
@@ -342,7 +323,7 @@ services:
       <<: *sentry_defaults
       # Increase `--commit-batch-size 1` below to deal with high-load environments.
       command: run post-process-forwarder --commit-batch-size 1 --entity errors
- 
+
   post-process-forwarder-transactions:
     <<: *sentry_defaults
     command: run post-process-forwarder --commit-batch-size 1 --entity transactions --commit-log-topic=snuba-transactions-commit-log --synchronize-commit-group transactions_group
@@ -410,7 +391,7 @@ volumes:
     external: true
   sentry-symbolicator:
     external: true
- 
+
   # These store ephemeral data that needn't persist across restarts.
   sentry-secrets:
   sentry-smtp:
