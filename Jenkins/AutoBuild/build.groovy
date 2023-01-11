@@ -1,4 +1,4 @@
-@Library('RootJenkinsLibs') import ru.lcgroup.jenkins.lib.Rocket
+@Library('*') import ru.*.jenkins.lib.Rocket
 
 
 def nuget_config_path = "C:/ProgramData/NuGet/NuGet.Config"
