@@ -1,4 +1,5 @@
-@Library("rocket-notify-lib") _
+@Library('RootJenkinsLibs') import ru.lcgroup.jenkins.lib.Rocket
+
 
 def nuget_config_path = "C:/ProgramData/NuGet/NuGet.Config"
 
@@ -7,13 +8,13 @@ def dotnet = "\"C:/Program Files/dotnet/dotnet.exe\""
 def msbuild = "\"C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/MSBuild.exe\""
 
 def projects = [
-        Pinery                  : [src_path : "", solution_name : "", "sfproj_path" : "", "sfproj_name" : ""],
-        Prj                     : [src_path : "", solution_name : "", "sfproj_path" : "", "sfproj_name" : ""],
-        Public_Relations        : [src_path : "", solution_name : "", "sfproj_path" : "", "sfproj_name" : ""],
-        Tech_Support_Api        : [src_path : "", solution_name : "", "sfproj_path" : "", "sfproj_name" : ""],
+        *                  : [src_path : "*", solution_name : "*", "sfproj_path" : "*", "sfproj_name" : "*"],
+        *                  : [src_path : "*", solution_name : "*", "sfproj_path" : "*", "sfproj_name" : "*"],
+        *                  : [src_path : "*", solution_name : "*", "sfproj_path" : "*", "sfproj_name" : "*"],
+        *                  : [src_path : "*", solution_name : "*", "sfproj_path" : "*", "sfproj_name" : "*"],
 ]
 
-def nuget_steps = [
+ddef nuget_steps = [
         "Nuget Restore *"                  : [],
         "Nuget Restore *"                     : [],
         "Nuget Restore *"        : [],
@@ -41,11 +42,11 @@ def unit_tests_steps = [
 
 def unit_test_config = [
         db_name         : "*-${BUILD_NUMBER}",
-        sql_server      : "",
-        sql_instance    : "",
-        sql_user        : "",
-        sql_pass        : "",
-        acc_file        : ""
+        sql_server      : "*-SQL",
+        sql_instance    : "*,1433",
+        sql_user        : "*",
+        sql_pass        : "*",
+        acc_file        : "*"
 ]
 
 def startDate = new Date()
@@ -79,7 +80,7 @@ properties([
                         type: 'GitParameterDefinition',
                         useRepository: '.*.git'),
                 booleanParam(
-                        defaultValue: false,
+                        defaultValue: true,
                         description: 'RUN unit tests',
                         name: 'RUN_UNIT_TESTS'
                 ),
@@ -108,7 +109,7 @@ properties([
                 ],
                 [
                         $class      : 'WHideParameterDefinition',
-                        defaultValue: '#*',
+                        defaultValue: '*',
                         name        : 'channel'
                 ]
         ])
@@ -133,7 +134,7 @@ timestamps {
                                 println('----> Clone infrastructure')
                                 println("-----")
                                 dir('infrastructure') {
-                                        git branch: env.INFRASTRUCTURE_BRANCH, credentialsId: '', url: '*'
+                                        git branch: env.INFRASTRUCTURE_BRANCH, credentialsId: 'gitlab_gituser', url: '*'
                                         pwsh returnStdout: true, script: '''
                         $InfraBranchWork = "''' + env.INFRASTRUCTURE_BRANCH + '''"
                         $InfraBranchSwitch = "''' + branch_name + '''"
@@ -258,12 +259,16 @@ timestamps {
                                         return buildResult
                                 }
                         } finally {
-                                def stopDate = new Date()
-                                title = "Result of build: ${JOB_BASE_NAME} | ${env.BUILD_CONF} | ${env.BRANCH}"
-                                text = "Number: *${BUILD_NUMBER}* \\n\\r Build Log: *[URL](${BUILD_URL}consoleFull)* \\n\\r Name: *${JOB_BASE_NAME}* \\n\\r Result: *${buildResult}* \\n\\r "
-                                withCredentials([usernamePassword(credentialsId: 'rocket_notifier', passwordVariable: 'rocket_notifier_token', usernameVariable: 'rocket_notifier_id')]) {
-                                        rocketLib.rocketNotify(buildResult,title,text,startDate,stopDate)
+                                for (channel in ["#chanel"]){
+                                        def stopDate = new Date()
+                                        def title = "Result of build: ${JOB_BASE_NAME} | ${env.BUILD_CONF} | ${env.BRANCH}"
+                                        def text = "Number: *${BUILD_NUMBER}* \\n\\r Build Log: *[URL](${BUILD_URL}consoleFull)* \\n\\r Name: *${JOB_BASE_NAME}* \\n\\r Result: *${buildResult}* \\n\\r "
+                                        withCredentials([usernamePassword(credentialsId: 'rocket_notifier', passwordVariable: 'rocket_notifier_token', usernameVariable: 'rocket_notifier_id')]){
+                                                def rocketObj = new Rocket(this)
+                                                rocketObj.rocketNotify("#chanel",rocket_notifier_id, , rocket_notifier_token, buildResult, title, text, startDate, stopDate)
+                                        }
                                 }
+
                         }
                 }
         }
