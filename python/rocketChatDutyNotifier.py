@@ -37,10 +37,10 @@ def sqlQueryTomorrow():
 
 def sqlQueryToday():
     try:
-        connection = mysql.connector.connect(host='192.168.1.132',
+        connection = mysql.connector.connect(host='*',
                                             database='duty',
                                             user='root',
-                                            password='Password123'
+                                            password='*'
                                             )
 
         # exectute sql query
