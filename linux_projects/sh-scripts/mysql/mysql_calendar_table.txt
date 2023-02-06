@@ -1,5 +1,5 @@
 alter table calendar drop PRIMARY KEY;
-alter table calendar add Id INT PRIMARY KEY;
+alter table calendar add Id INT PRIMARY KEY AUTO_INCREMENT;
 alter talbe calendar drop column Id;
 select * from calendar where calendar_date=(select curdate())
 select * from calendar where calendar_date=(select curdate() + INTERVAL 1 DAY)
