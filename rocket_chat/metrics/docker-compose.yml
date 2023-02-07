@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  grafana:
+    image: grafana/grafana:6.6.2
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - ./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./config/grafana/provisioning/dashboards/provider:/etc/grafana/provisioning/dashboards:ro
+      - ./config/grafana/provisioning/dashboards/json-exports:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+
+  prometheus:
+    image: quay.io/prometheus/prometheus:v2.16.0
+    restart: unless-stopped
+    ports:
+     - 9090:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - '--storage.tsdb.retention.time=12w'
+      - '--storage.tsdb.path=/prometheus'
+    volumes:
+      - ./data/prometheus:/prometheus
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
