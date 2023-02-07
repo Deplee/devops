@@ -1,9 +1,0 @@
----
-# tasks file for prepare_host
-#- include_tasks: install_pkgs.yml
-- include_tasks: nginx_version.yml
-  when: nginx_version == true
-- include_tasks: prepare_server.yml
-  when: nginx_remove == false
-- include_tasks: uninstall_nginx.yml
-  when: nginx_remove == true
