@@ -1,0 +1,3 @@
+# Groovy scripts templates
+---
+
