@@ -1,0 +1,8 @@
+- name: "Delete test dirs"
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+  - /home/izuna/dir1
+  - /home/izuna/dir2
+  become: true

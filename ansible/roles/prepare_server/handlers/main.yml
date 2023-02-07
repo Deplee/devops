@@ -1,0 +1,20 @@
+---
+# handlers file for prepare_host
+
+- name: stop nginx
+  ansible.builtin.systemd:
+    name: "nginx"
+    state: "stopped"
+    enabled: "no"
+
+- name: start nginx
+  ansible.builtin.systemd:
+    name: "nginx"
+    state: "started"
+    enabled: "yes"
+
+- name: restart nginx
+  ansible.builtin.systemd:
+    name: "nginx"
+    state: "restarted"
+    enabled: "yes"

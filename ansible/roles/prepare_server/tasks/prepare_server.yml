@@ -1,0 +1,34 @@
+---
+
+- name: installing & configuring pkgs for new server
+  block:
+    - name: installing pkgs
+      ansible.builtin.apt:
+          name: 
+          - "nginx"
+          - "sysstat"
+          state: "{{ 'present' if not pkgs_latest else 'latest'}}"
+          update_cache: true
+      become: true
+
+    - name: creating nginx dirs
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "ubuntu1"
+        group: "ubuntu1" 
+        mode: "0755"
+      become: true
+      with_items:
+        - "/etc/nginx"
+        - "/var/log/nginx"
+        - "/data/nginx"
+        - "/var/www/html"
+        # - "/home/ubuntu1/kekdir"
+      notify:
+      - start nginx
+#     when: check_nginx_version.stdout.find('nginx/') != -1
+#     when: check_nginx_version.stdout.find('nginx') != -1 #version is empty - dir will be created
+#     when: check_nginx_version.stdout.find('nginx') != 1 #version is NOT empty - dir will not be created
+
+

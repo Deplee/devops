@@ -1,0 +1,5 @@
+- name: "Preparing server"
+  hosts: "my"
+  become: true
+  roles:
+    - role: '../roles/prepare_server'
