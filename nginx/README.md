@@ -1,4 +1,0 @@
-# Nginx
----
-
-nginx conf & etc

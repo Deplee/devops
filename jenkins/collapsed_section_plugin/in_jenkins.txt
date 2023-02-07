@@ -1,0 +1,6 @@
+Section {2}
+
+^(.*BEGIN SECTION)\s+(\w.+)$
+
+(.*End of Stage)
+
