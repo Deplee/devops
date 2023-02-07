@@ -18,7 +18,8 @@ RUN apk add --no-cache \
     chmod 600 /root/.ssh/id_rsa && chmod 644 /root/.ssh/id_rsa.pub && chmod 644 /etc/ansible/.vp && update-ca-certificates && \
     python3 -m pip --no-cache-dir install ansible && python3 -m pip --no-cache-dir install "pywinrm>=0.2.2" && \
     python3 -m pip --no-cache-dir install docker && \
-    ln -sf /usr/bin/ansible-playbook /usr/local/bin/ansible-playbook
+    ln -sf /usr/bin/ansible-playbook /usr/local/bin/ansible-playbook && \
+    chown -R 0:0 /root/.ssh
 
 
 ENTRYPOINT ["setup-sshd"]

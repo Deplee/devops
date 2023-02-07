@@ -6,5 +6,6 @@ COPY --from=ssh_keys /root/.ssh /root/.ssh
 COPY --from=ssh_keys /root/.docker /root/.docker
 COPY --from=ssh_keys /etc/ansible/.vp /etc/ansible/.vp
 COPY --from=ssh_keys /usr/local/share/ca-certificates/ /usr/local/share/ca-certificates/
+RUN chown -R 0:0 /root/.ssh
 
 ENTRYPOINT ["setup-sshd"]
