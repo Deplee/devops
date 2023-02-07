@@ -1,11 +1,9 @@
-FROM *:latest AS ssh_keys
-# from jenkins/ssh-agent:latest-jdk11
-FROM *:latest
+FROM */keys:latest AS ssh_keys
+FROM jenkins/ssh-agent:latest-jdk11
 
-COPY --from=ssh_keys /root/.ssh /root/.ssh
-COPY --from=ssh_keys /root/.docker /root/.docker
-COPY --from=ssh_keys /etc/ansible/.vp /etc/ansible/.vp
-COPY --from=ssh_keys /usr/local/share/ca-certificates/ /usr/local/share/ca-certificates/
-RUN chown -R 0:0 /root/.ssh
+COPY --from=ssh_keys /root/.ssh/id_rsa.pub "${JENKINS_AGENT_HOME}/.ssh/authorized_keys"
+
+RUN apt-get update && apt-get install --no-install-recommends git -y && chmod 644 "${JENKINS_AGENT_HOME}/.ssh/authorized_keys" && \
+    apt-get clean && rm -rf /var/cache/apt
 
 ENTRYPOINT ["setup-sshd"]
