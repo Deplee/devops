@@ -1,0 +1,4 @@
+TO DO:
+  - add GUI (zenity)
+  - make deb pkg\cmake file
+  - make job in jenkins (copy & build)

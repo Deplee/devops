@@ -1,0 +1,26 @@
+alter table calendar drop PRIMARY KEY;
+alter table calendar add Id INT PRIMARY KEY AUTO_INCREMENT;
+alter talbe calendar drop column Id;
+select * from calendar where calendar_date=(select curdate())
+select * from calendar where calendar_date=(select curdate() + INTERVAL 1 DAY)
+
+
+DROP PROCEDURE IF EXISTS FillCalendar;
+DROP TABLE IF EXISTS calendar;
+CREATE TABLE IF NOT EXISTS calendar(calendar_date DATE NOT NULL PRIMARY KEY);
+
+DELIMITER $$
+    CREATE PROCEDURE FillCalendar(start_date DATE, end_date DATE)
+    BEGIN
+    DECLARE crt_date DATE;
+    SET crt_date = start_date;
+    WHILE crt_date <= end_date DO
+        INSERT IGNORE INTO calendar VALUES(crt_date);
+        SET crt_date = ADDDATE(crt_date, INTERVAL 1 DAY);
+    END WHILE;
+    END$$
+DELIMITER ;
+
+CALL FillCalendar('2023-01-01', '2024-12-31');
+
+

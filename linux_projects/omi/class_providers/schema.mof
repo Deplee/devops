@@ -1,0 +1,14 @@
+class SB_Checklist
+{
+	[Key] String ZNO;
+	String FIO;
+	String Date;
+	String WiFi;
+	String BLTH;
+	String BRCD;
+	String TM;
+	String MFU;
+	String BP;
+	String POS;
+	String WebCam;
+};
