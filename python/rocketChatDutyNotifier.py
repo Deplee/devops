@@ -11,7 +11,7 @@ def sqlQueryTomorrow():
         connection = mysql.connector.connect(host='192.168.1.132',
                                             database='duty',
                                             user='root',
-                                            password='Password123'
+                                            password='*'
                                             )
 
         # exectute sql query
