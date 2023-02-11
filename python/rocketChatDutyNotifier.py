@@ -8,9 +8,9 @@ import time
 
 def sqlQueryTomorrow():
     try:
-        connection = mysql.connector.connect(host='192.168.1.132',
+        connection = mysql.connector.connect(host='*',
                                             database='duty',
-                                            user='root',
+                                            user='*',
                                             password='*'
                                             )
 
@@ -39,7 +39,7 @@ def sqlQueryToday():
     try:
         connection = mysql.connector.connect(host='*',
                                             database='duty',
-                                            user='root',
+                                            user='*',
                                             password='*'
                                             )
 
@@ -68,9 +68,9 @@ def sqlQueryToday():
 def RocketNotifyToday():
     name_engineer=sqlQueryToday()
     data = {
-                        "channel": "#*",
+                        "channel": "*",
                         "alias": "Devops Duty Bot",
-                        "avatar": "https://icon-icons.com/downloadimage.php?id=183522&root=2924/PNG/512/&file=forbidden_drink_bottles_bottle_prohibition_signal_icon_183522.png",
+                        "avatar": "https://icon-icons.com/downloadimage.php?id=183522&*=2924/PNG/512/&file=forbidden_drink_bottles_bottle_prohibition_signal_icon_183522.png",
                                     "text": "Today Duty is @" + name_engineer[0],
                                     "color": "#C6201E",
                     }
@@ -91,9 +91,9 @@ def RocketNotifyTomorrow():
 
     name_engineer=sqlQueryTomorrow()
     data = {
-                        "channel": "#*",
+                        "channel": "*",
                         "alias": "Devops Duty Bot",
-                        "avatar": "https://icon-icons.com/downloadimage.php?id=183522&root=2924/PNG/512/&file=forbidden_drink_bottles_bottle_prohibition_signal_icon_183522.png",
+                        "avatar": "https://icon-icons.com/downloadimage.php?id=183522&*=2924/PNG/512/&file=forbidden_drink_bottles_bottle_prohibition_signal_icon_183522.png",
                                     "text": 'Tomorrow duty is @' + name_engineer[0] ,
                                     "color": "#C6201E",
                     }
@@ -101,7 +101,7 @@ def RocketNotifyTomorrow():
     print (chat_url)
     headers = { 'Content-Type' : 'application/json',
     'X-Auth-Token': '*',
-    'X-User-Id': ''}
+    'X-User-Id': '*'}
     response = requests.post(chat_url, headers=headers, json=data)
 
     print("Status Code", response.status_code)
@@ -118,3 +118,4 @@ schedule.every().day.at("10:00").do(RocketNotifyTomorrow)
 while True:
     schedule.run_pending()
     time.sleep(1)
+
