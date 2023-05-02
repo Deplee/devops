@@ -1,8 +1,0 @@
-#- name: "get nginx version"
-- name: "check nginx version"
-  shell: nginx -v
-  register: "check_nginx_version"
-
-- name: "print nginx version"
-  ansible.builtin.debug:
-    var: "check_nginx_version"

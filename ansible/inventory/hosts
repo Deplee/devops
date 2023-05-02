@@ -1,2 +1,0 @@
-[my]
-ubuntu_server_1 ansible_host=192.168.0.65 ansible_user=ubuntu1 ansible_become_password=1234
